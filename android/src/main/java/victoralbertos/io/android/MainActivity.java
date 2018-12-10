@@ -28,9 +28,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textview);
 
-        getCommonCache();
-
-
         getCommonCache().getCurTime(getCommonService().getCurTime())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -66,7 +63,6 @@ public class MainActivity extends Activity {
 
     private CommonCache getCommonCache() {
         return new RxCache.Builder()
-                .useExpiredDataIfLoaderNotAvailable(true)
                 .persistence(MainActivity.this.getExternalCacheDir(), new GsonSpeaker())
                 .using(CommonCache.class);
     }

@@ -47,21 +47,10 @@ public final class RxCache {
    * Builder for building an specific RxCache instance
    */
   public static class Builder {
-    private boolean useExpiredDataIfLoaderNotAvailable;
     private Integer maxMBPersistenceCache;
     private File cacheDirectory;
     private JolyglotGenerics jolyglot;
 
-    /**
-     * If true RxCache will serve Records already expired, instead of evict them and throw an
-     * exception If not supplied, false will be the default option
-     *
-     * @return BuilderRxCache The builder of RxCache
-     */
-    public Builder useExpiredDataIfLoaderNotAvailable(boolean useExpiredDataIfLoaderNotAvailable) {
-      this.useExpiredDataIfLoaderNotAvailable = useExpiredDataIfLoaderNotAvailable;
-      return this;
-    }
 
     /**
      * Sets the max memory in megabytes for all stored records on persistence layer If not supplied,
@@ -100,10 +89,6 @@ public final class RxCache {
       this.jolyglot = jolyglot;
 
       return new RxCache(this);
-    }
-
-    public boolean useExpiredDataIfLoaderNotAvailable() {
-      return useExpiredDataIfLoaderNotAvailable;
     }
 
     public Integer getMaxMBPersistenceCache() {

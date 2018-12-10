@@ -29,6 +29,7 @@ import io.rx_cache2.Expirable;
 import io.rx_cache2.LifeCache;
 import io.rx_cache2.ProviderKey;
 import io.rx_cache2.Reply;
+import io.rx_cache2.UseExpiredDataIfNotLoaderAvailable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -47,7 +48,7 @@ public final class ProxyTranslator {
     ConfigProvider prev = loadConfigProviderMethod(method);
 
     ConfigProvider configProvider = new ConfigProvider(prev.getProviderKey(),
-        null, prev.getLifeTimeMillis(), prev.requiredDetailedResponse(), prev.isExpirable(),
+            prev.useExpiredDataIfNotLoaderAvailable(), prev.getLifeTimeMillis(), prev.requiredDetailedResponse(), prev.isExpirable(),
         prev.isEncrypted(), getDynamicKey(method, objectsMethod),
         getDynamicKeyGroup(method, objectsMethod),
         getLoaderObservable(method, objectsMethod),
@@ -112,6 +113,11 @@ public final class ProxyTranslator {
     return true;
   }
 
+  private boolean useExpiredDataIfNotLoaderAvailable(Method method) {
+    UseExpiredDataIfNotLoaderAvailable useExpiredDataIfNotLoaderAvailable = method.getAnnotation(UseExpiredDataIfNotLoaderAvailable.class);
+    if (useExpiredDataIfNotLoaderAvailable != null) return true;
+    return false;
+  }
   private boolean isEncrypted(Method method) {
     Encrypt encrypt = method.getAnnotation(Encrypt.class);
     if (encrypt != null) return true;
@@ -167,7 +173,7 @@ public final class ProxyTranslator {
       result = configProviderMethodCache.get(method);
       if (result == null) {
         result = new ConfigProvider(getProviderKey(method),
-            null, getLifeTimeCache(method),
+            useExpiredDataIfNotLoaderAvailable(method), getLifeTimeCache(method),
             requiredDetailResponse(method), getExpirable(method), isEncrypted(method),
             null, null, null, null);
         configProviderMethodCache.put(method, result);

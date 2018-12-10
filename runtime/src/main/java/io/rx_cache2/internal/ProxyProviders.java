@@ -39,7 +39,6 @@ public final class ProxyProviders implements InvocationHandler {
   public ProxyProviders(RxCache.Builder builder, Class<?> providersClass) {
     processorProviders = DaggerRxCacheComponent.builder()
         .rxCacheModule(new RxCacheModule(builder.getCacheDirectory(),
-            builder.useExpiredDataIfLoaderNotAvailable(),
             builder.getMaxMBPersistenceCache(), getEncryptKey(providersClass),
             getMigrations(providersClass), builder.getJolyglot()))
         .build().providers();

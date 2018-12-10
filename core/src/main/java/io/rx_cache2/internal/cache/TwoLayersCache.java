@@ -41,9 +41,9 @@ public final class TwoLayersCache {
   }
 
   public void save(String providerKey, String dynamicKey, String dynamicKeyGroup, Object data,
-      Long lifeTime, boolean isExpirable, boolean isEncrypted) {
+      Long lifeTime, boolean isExpirable, boolean isEncrypted,boolean useExpiredDataIfNotLoaderAvailable) {
     saveRecord.save(providerKey, dynamicKey, dynamicKeyGroup, data, lifeTime, isExpirable,
-        isEncrypted);
+        isEncrypted,useExpiredDataIfNotLoaderAvailable);
   }
 
   public void evictProviderKey(final String providerKey) {

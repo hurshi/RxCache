@@ -31,17 +31,15 @@ import javax.inject.Singleton;
 @Module
 public final class RxCacheModule {
   private final File cacheDirectory;
-  private final boolean useExpiredDataIfLoaderNotAvailable;
   private final Integer maxMgPersistenceCache;
   private final String encryptKey;
   private final List<MigrationCache> migrations;
   private final JolyglotGenerics jolyglot;
 
-  public RxCacheModule(File cacheDirectory, Boolean useExpiredDataIfLoaderNotAvailable,
+  public RxCacheModule(File cacheDirectory,
       Integer maxMgPersistenceCache,
       String encryptKey, List<MigrationCache> migrations, JolyglotGenerics jolyglot) {
     this.cacheDirectory = cacheDirectory;
-    this.useExpiredDataIfLoaderNotAvailable = useExpiredDataIfLoaderNotAvailable;
     this.maxMgPersistenceCache = maxMgPersistenceCache;
     this.encryptKey = encryptKey;
     this.migrations = migrations;
@@ -54,10 +52,6 @@ public final class RxCacheModule {
 
   @Singleton @Provides Persistence providePersistence(io.rx_cache2.internal.Disk disk) {
     return disk;
-  }
-
-  @Singleton @Provides Boolean useExpiredDataIfLoaderNotAvailable() {
-    return useExpiredDataIfLoaderNotAvailable;
   }
 
   @Singleton @Provides io.rx_cache2.internal.Memory provideMemory() {

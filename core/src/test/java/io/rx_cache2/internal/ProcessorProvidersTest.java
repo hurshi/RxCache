@@ -109,8 +109,8 @@ public class ProcessorProvidersTest extends BaseTest {
     }
 
     @Test public void When_No_Loader_And_Cache_Expired_But_Use_Expired_Data_If_Loader_Not_Available_Then_Get_Mock() {
-        processorProvidersUT = new io.rx_cache2.internal.ProcessorProvidersBehaviour(twoLayersCacheMock, false, evictExpiredRecordsPersistence,
-            getDeepCopy, doMigrations);
+        processorProvidersUT = new io.rx_cache2.internal.ProcessorProvidersBehaviour(twoLayersCacheMock, evictExpiredRecordsPersistence,
+            getDeepCopy, doMigrations, hasRecordExpired);
 
         TestObserver observerMock =
             getSubscriberCompleted(true, true, false, Loader.NULL, true);
@@ -125,8 +125,8 @@ public class ProcessorProvidersTest extends BaseTest {
     }
 
     @Test public void When_Loader_Throws_Exception_And_Cache_Expired_But_Use_Expired_Data_If_Loader_Not_Available_Then_Get_Mock() {
-        processorProvidersUT = new io.rx_cache2.internal.ProcessorProvidersBehaviour(twoLayersCacheMock, false, evictExpiredRecordsPersistence,
-            getDeepCopy, doMigrations);
+        processorProvidersUT = new io.rx_cache2.internal.ProcessorProvidersBehaviour(twoLayersCacheMock, evictExpiredRecordsPersistence,
+            getDeepCopy, doMigrations, hasRecordExpired);
 
         TestObserver observerMock = getSubscriberCompleted(true, true, false, Loader.EXCEPTION, true);
         assertThat(observerMock.errorCount(), is(0));
@@ -156,10 +156,10 @@ public class ProcessorProvidersTest extends BaseTest {
             null, null, detailResponse, true, false,
             "", "", observable, new EvictProvider(evictCache));
 
-        if (hasCache) twoLayersCacheMock.save("mockKey", "", "", new Mock("message"), configProvider.getLifeTimeMillis(), configProvider.isExpirable(), configProvider.isEncrypted());
+        if (hasCache) twoLayersCacheMock.save("mockKey", "", "", new Mock("message"), configProvider.getLifeTimeMillis(), configProvider.isExpirable(), configProvider.isEncrypted(),false);
 
-        processorProvidersUT = new ProcessorProvidersBehaviour(twoLayersCacheMock, useExpiredDataIfLoaderNotAvailable, evictExpiredRecordsPersistence,
-            getDeepCopy, doMigrations);
+        processorProvidersUT = new ProcessorProvidersBehaviour(twoLayersCacheMock, evictExpiredRecordsPersistence,
+            getDeepCopy, doMigrations, hasRecordExpired);
 
         TestObserver observerMock = processorProvidersUT.getData(configProvider).test();
         observerMock.awaitTerminalEvent();

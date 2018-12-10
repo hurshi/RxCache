@@ -27,26 +27,27 @@ import io.rx_cache2.EvictDynamicKeyGroup;
 import io.rx_cache2.Reply;
 import io.rx_cache2.Source;
 import io.rx_cache2.internal.cache.GetDeepCopy;
+import io.rx_cache2.internal.cache.HasRecordExpired;
+
 import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 public final class ProcessorProvidersBehaviour implements ProcessorProviders {
   private final io.rx_cache2.internal.cache.TwoLayersCache twoLayersCache;
-  private final Boolean useExpiredDataIfLoaderNotAvailable;
   private final GetDeepCopy getDeepCopy;
   private final Observable<Integer> oProcesses;
   private volatile Boolean hasProcessesEnded;
+  private final HasRecordExpired hasRecordExpired;
 
   @Inject public ProcessorProvidersBehaviour(
       io.rx_cache2.internal.cache.TwoLayersCache twoLayersCache,
-      Boolean useExpiredDataIfLoaderNotAvailable,
       io.rx_cache2.internal.cache.EvictExpiredRecordsPersistence evictExpiredRecordsPersistence,
-      GetDeepCopy getDeepCopy, io.rx_cache2.internal.migration.DoMigrations doMigrations) {
+      GetDeepCopy getDeepCopy, io.rx_cache2.internal.migration.DoMigrations doMigrations,HasRecordExpired hasRecordExpired) {
     this.hasProcessesEnded = false;
     this.twoLayersCache = twoLayersCache;
-    this.useExpiredDataIfLoaderNotAvailable = useExpiredDataIfLoaderNotAvailable;
     this.getDeepCopy = getDeepCopy;
     this.oProcesses = startProcesses(doMigrations, evictExpiredRecordsPersistence);
+    this.hasRecordExpired = hasRecordExpired;
   }
 
   private Observable<Integer> startProcesses(
@@ -88,12 +89,12 @@ public final class ProcessorProvidersBehaviour implements ProcessorProviders {
   //VisibleForTesting
   <T> Observable<T> getData(final io.rx_cache2.ConfigProvider configProvider) {
     Record<Object> record = twoLayersCache.retrieve(configProvider.getProviderKey(), configProvider.getDynamicKey(),
-        configProvider.getDynamicKeyGroup(), useExpiredDataIfLoaderNotAvailable,
+        configProvider.getDynamicKeyGroup(), configProvider.useExpiredDataIfNotLoaderAvailable(),
         configProvider.getLifeTimeMillis(), configProvider.isEncrypted());
 
     Observable<Reply> replyObservable;
 
-    if (record != null && !configProvider.evictProvider().evict()) {
+    if (record != null && !configProvider.evictProvider().evict() && !hasRecordExpired.hasRecordExpired(record)) {
       replyObservable = Observable.just(new Reply(record.getData(), record.getSource(), configProvider.isEncrypted()));
     } else {
       replyObservable = getDataFromLoader(configProvider, record);
@@ -110,34 +111,30 @@ public final class ProcessorProvidersBehaviour implements ProcessorProviders {
       final Record record) {
     return configProvider.getLoaderObservable().map(new Function<Object, Reply>() {
       @Override public Reply apply(Object data) throws Exception {
-        boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable() != null ?
-            configProvider.useExpiredDataIfNotLoaderAvailable()
-            : useExpiredDataIfLoaderNotAvailable;
-
-        if (data == null && useExpiredData && record != null) {
-          return new Reply(record.getData(), record.getSource(), configProvider.isEncrypted());
-        }
+//        boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable();
+//
+//        if (data == null && useExpiredData && record != null) {
+//          return new Reply(record.getData(), record.getSource(), configProvider.isEncrypted());
+//        }
 
         clearKeyIfNeeded(configProvider);
 
-        if (data == null) {
-          throw new io.rx_cache2.RxCacheException(io.rx_cache2.internal.Locale.NOT_DATA_RETURN_WHEN_CALLING_OBSERVABLE_LOADER
-              + " "
-              + configProvider.getProviderKey());
-        }
+//        if (data == null) {
+//          throw new io.rx_cache2.RxCacheException(io.rx_cache2.internal.Locale.NOT_DATA_RETURN_WHEN_CALLING_OBSERVABLE_LOADER
+//              + " "
+//              + configProvider.getProviderKey());
+//        }
 
         twoLayersCache.save(configProvider.getProviderKey(), configProvider.getDynamicKey(),
             configProvider.getDynamicKeyGroup(), data, configProvider.getLifeTimeMillis(),
-            configProvider.isExpirable(), configProvider.isEncrypted());
+            configProvider.isExpirable(), configProvider.isEncrypted(),configProvider.useExpiredDataIfNotLoaderAvailable());
         return new Reply(data, Source.CLOUD, configProvider.isEncrypted());
       }
     }).onErrorReturn(new Function<Object, Object>() {
       @Override public Object apply(Object o) throws Exception {
         clearKeyIfNeeded(configProvider);
 
-        boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable() != null ?
-            configProvider.useExpiredDataIfNotLoaderAvailable()
-            : useExpiredDataIfLoaderNotAvailable;
+        boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable();
 
         if (useExpiredData && record != null) {
           return new Reply(record.getData(), record.getSource(), configProvider.isEncrypted());

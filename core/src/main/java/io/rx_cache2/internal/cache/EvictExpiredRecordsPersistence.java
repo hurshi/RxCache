@@ -46,7 +46,7 @@ public final class EvictExpiredRecordsPersistence extends Action {
         record = persistence.retrieveRecord(key, true, encryptKey);
       }
 
-      if (record != null && hasRecordExpired.hasRecordExpired(record)) {
+      if (record != null && hasRecordExpired.hasRecordExpired(record) && !record.getUseExpiredDataIfNotLoaderAvailable()) {
         persistence.evict(key);
       }
     }

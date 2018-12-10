@@ -36,8 +36,8 @@ public class EvictExpiredRecordsPersistenceTest extends BaseTest {
         int recordsCount = 100;
 
         for (int i = 0; i < recordsCount/2; i++) {
-            twoLayersCache.save(i+"_expired", "", "", new Mock(i+"_expired"), ONE_SECOND_LIFE, true, false);
-            twoLayersCache.save(i+"_live", "", "", new Mock(i+"_live"), THIRTY_SECOND_LIFE, true, false);
+            twoLayersCache.save(i+"_expired", "", "", new Mock(i+"_expired"), ONE_SECOND_LIFE, true, false,false);
+            twoLayersCache.save(i+"_live", "", "", new Mock(i+"_live"), THIRTY_SECOND_LIFE, true, false,false);
         }
 
         waitTime(MORE_THAN_ONE_SECOND_LIFE);

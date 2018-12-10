@@ -40,7 +40,7 @@ public class ActionsListTest {
   @Before public void setUp() {
     processProvider = DaggerRxCacheComponent.builder()
         .rxCacheModule(new RxCacheModule(temporaryFolder.getRoot(),
-            false, null, null, null, new GsonSpeaker()))
+             null, null, null, new GsonSpeaker()))
         .build().providers();
   }
 

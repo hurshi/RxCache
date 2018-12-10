@@ -55,8 +55,10 @@ public final class RetrieveRecord extends Action {
     }
 
     record.setLifeTime(lifeTime);
+    record.setUseExpiredDataIfNotLoaderAvailable(useExpiredDataIfLoaderNotAvailable);
 
-    if (hasRecordExpired.hasRecordExpired(record)) {
+
+    if (hasRecordExpired.hasRecordExpired(record) && !useExpiredDataIfLoaderNotAvailable) {
       if (!dynamicKeyGroup.isEmpty()) {
         evictRecord.evictRecordMatchingDynamicKeyGroup(providerKey, dynamicKey,
             dynamicKeyGroup);
@@ -65,8 +67,6 @@ public final class RetrieveRecord extends Action {
       } else {
         evictRecord.evictRecordsMatchingProviderKey(providerKey);
       }
-
-      return useExpiredDataIfLoaderNotAvailable ? record : null;
     }
 
     return record;

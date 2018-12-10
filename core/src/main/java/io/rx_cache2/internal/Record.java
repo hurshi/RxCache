@@ -36,6 +36,7 @@ public final class Record<T> {
   private final long timeAtWhichWasPersisted;
   private final String dataClassName, dataCollectionClassName, dataKeyMapClassName;
   private Boolean expirable;
+  private Boolean useExpiredDataIfNotLoaderAvailable;
 
   //LifeTime requires to be stored to be evicted by EvictExpiredRecordsTask when no life time is available without a config provider
   private Long lifeTime;
@@ -45,7 +46,7 @@ public final class Record<T> {
 
   //VisibleForTesting
   Record(T data) {
-    this(data, true, null);
+    this(data, true, null,false);
   }
 
   public Record() {
@@ -57,10 +58,11 @@ public final class Record<T> {
     expirable = true;
   }
 
-  public Record(T data, Boolean expirable, Long lifeTime) {
+  public Record(T data, Boolean expirable, Long lifeTime, boolean useExpiredDataIfNotLoaderAvailable) {
     this.data = data;
     this.expirable = expirable;
     this.lifeTime = lifeTime;
+    this.useExpiredDataIfNotLoaderAvailable = useExpiredDataIfNotLoaderAvailable;
     this.timeAtWhichWasPersisted = System.currentTimeMillis();
     this.source = Source.MEMORY;
 
@@ -144,6 +146,14 @@ public final class Record<T> {
 
   public void setLifeTime(Long lifeTime) {
     this.lifeTime = lifeTime;
+  }
+
+  public Boolean getUseExpiredDataIfNotLoaderAvailable() {
+    return useExpiredDataIfNotLoaderAvailable;
+  }
+
+  public void setUseExpiredDataIfNotLoaderAvailable(Boolean useExpiredDataIfNotLoaderAvailable) {
+    this.useExpiredDataIfNotLoaderAvailable = useExpiredDataIfNotLoaderAvailable;
   }
 
   public float getSizeOnMb() {
