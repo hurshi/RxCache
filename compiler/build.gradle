@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 group = 'com.github.VictorAlbertos'
-version='1.8.0-2.x'
+version = '1.8.0-2.x'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -13,11 +13,11 @@ dependencies {
     compile project(':core')
     compile project(':runtime')
 
-    compile 'com.google.auto.service:auto-service:1.0-rc2'
-    compile 'com.squareup:javapoet:1.9.0'
+    compile 'com.google.auto.service:auto-service:1.0-rc4'
+    compile 'com.squareup:javapoet:1.11.1'
 
     testCompile "junit:junit:4.12"
-    testCompile "com.google.testing.compile:compile-testing:0.10"
+    testCompile "com.google.testing.compile:compile-testing:0.15"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
