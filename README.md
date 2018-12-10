@@ -4,6 +4,28 @@
 
 # RxCache
 
+### Diff from [VictorAlbertos/RxCache](https://github.com/VictorAlbertos/RxCache)
+
+1. Features:
+
+   1. Enable feature descripted by `.useExpiredDataIfLoaderNotAvailable`
+   2. Use local overdue data if network has some error
+
+2. Deprecated( Removed ) ~~RxCache.Builder().useExpiredDataIfLoaderNotAvailable~~
+
+3. Add annotation `@UseExpiredDataIfNotLoaderAvailable`
+
+4. Usage:
+
+   ```java
+   @UseExpiredDataIfNotLoaderAvailable
+   @LifeCache(duration = 2, timeUnit = TimeUnit.HOURS)
+   public Observable<Person> getPersion(Observable<Person> personSingle)
+   
+   ```
+
+-----
+
 > [**中文文档**](http://www.jianshu.com/p/b58ef6b0624b)
 
 _For a more reactive approach go [here](https://github.com/VictorAlbertos/ReactiveCache/tree/2.x)_.
@@ -18,7 +40,7 @@ Inspired by [Retrofit](http://square.github.io/retrofit/) api, **RxCache is a re
 
 When supplying an **`observable`, `single`, `maybe` or `flowable` (these are the supported Reactive types)** which contains the data provided by an expensive task -probably an http connection, RxCache determines if it is needed 
 to subscribe to it or instead fetch the data previously cached. This decision is made based on the providers configuration.
- 
+
 ```java
 Observable<List<Mock>> getMocks(Observable<List<Mock>> oMocks);
 ```
@@ -44,7 +66,7 @@ dependencies {
 ```
 
 Because RxCache uses internally [Jolyglot](https://github.com/VictorAlbertos/Jolyglot) to serialize and deserialize objects, you need to add one of the next dependency to gradle.
- 
+
 ```gradle
 dependencies {
     // To use Gson 
