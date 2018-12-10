@@ -3,7 +3,9 @@ package victoralbertos.io.android;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.rx_cache2.internal.RxCache;
@@ -18,17 +20,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class MainActivity extends Activity {
     private static final String TAG = ">>> RxCache TEST: ";
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getCommonCache().getUser(getCommonService().getUsers())
+        textView = (TextView) findViewById(R.id.textview);
+
+        getCommonCache();
+
+
+        getCommonCache().getCurTime(getCommonService().getCurTime())
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new Consumer<User>() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<CurTime>() {
                     @Override
-                    public void accept(User users) throws Exception {
-                        Log.e(TAG, "api = " + new GsonSpeaker().toJson(users));
+                    public void accept(CurTime time) throws Exception {
+                        textView.setText(time.getResult().getDatetime_2());
+                        Log.e(TAG, "api = " + new GsonSpeaker().toJson(time));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
