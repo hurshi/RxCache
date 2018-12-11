@@ -38,7 +38,7 @@ public final class SaveRecord extends Action {
   }
 
   void save(final String providerKey, final String dynamicKey, final String dynamicKeyGroup,
-      final Object data, final Long lifeTime, final boolean isExpirable,
+      final Object data, final long lifeTime, final boolean isExpirable,
       final boolean isEncrypted,boolean useExpiredDataIfNotLoaderAvailable) {
     String composedKey = composeKey(providerKey, dynamicKey, dynamicKeyGroup);
 

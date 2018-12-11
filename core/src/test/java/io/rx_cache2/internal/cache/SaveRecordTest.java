@@ -53,7 +53,7 @@ public class SaveRecordTest extends BaseTest {
 
         //39 megabytes of memory
         for (int i = 0; i < records; i++) {
-            saveRecordUT.save(i+"", "", "", createMocks(records), null, true, false);
+            saveRecordUT.save(i+"", "", "", createMocks(records), 0l, true, false,false);
         }
 
         assertTrue("storedMB minor or equal than " + maxMB, disk.storedMB() <= maxMB);

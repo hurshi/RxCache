@@ -35,18 +35,18 @@ public final class Record<T> {
   private final T data;
   private final long timeAtWhichWasPersisted;
   private final String dataClassName, dataCollectionClassName, dataKeyMapClassName;
-  private Boolean expirable;
-  private Boolean useExpiredDataIfNotLoaderAvailable;
+  private boolean expirable = true;
+  private boolean useExpiredDataIfNotLoaderAvailable;
 
   //LifeTime requires to be stored to be evicted by EvictExpiredRecordsTask when no life time is available without a config provider
-  private Long lifeTime;
+  private long lifeTime;
 
   //Required by EvictExpirableRecordsPersistence task
   private transient float sizeOnMb;
 
   //VisibleForTesting
   Record(T data) {
-    this(data, true, null,false);
+    this(data, true, 0,false);
   }
 
   public Record() {
@@ -58,7 +58,7 @@ public final class Record<T> {
     expirable = true;
   }
 
-  public Record(T data, Boolean expirable, Long lifeTime, boolean useExpiredDataIfNotLoaderAvailable) {
+  public Record(T data, boolean expirable, long lifeTime, boolean useExpiredDataIfNotLoaderAvailable) {
     this.data = data;
     this.expirable = expirable;
     this.lifeTime = lifeTime;
@@ -140,19 +140,19 @@ public final class Record<T> {
     return timeAtWhichWasPersisted;
   }
 
-  public Long getLifeTime() {
+  public long getLifeTime() {
     return lifeTime;
   }
 
-  public void setLifeTime(Long lifeTime) {
+  public void setLifeTime(long lifeTime) {
     this.lifeTime = lifeTime;
   }
 
-  public Boolean getUseExpiredDataIfNotLoaderAvailable() {
+  public boolean getUseExpiredDataIfNotLoaderAvailable() {
     return useExpiredDataIfNotLoaderAvailable;
   }
 
-  public void setUseExpiredDataIfNotLoaderAvailable(Boolean useExpiredDataIfNotLoaderAvailable) {
+  public void setUseExpiredDataIfNotLoaderAvailable(boolean useExpiredDataIfNotLoaderAvailable) {
     this.useExpiredDataIfNotLoaderAvailable = useExpiredDataIfNotLoaderAvailable;
   }
 
@@ -176,11 +176,11 @@ public final class Record<T> {
     return dataKeyMapClassName;
   }
 
-  public Boolean getExpirable() {
+  public boolean getExpirable() {
     return expirable;
   }
 
-  public void setExpirable(Boolean expirable) {
+  public void setExpirable(boolean expirable) {
     this.expirable = expirable;
   }
 }
