@@ -35,7 +35,7 @@ public final class TwoLayersCache {
   }
 
   public <T> Record<T> retrieve(String providerKey, String dynamicKey, String dynamicKeyGroup,
-      boolean useExpiredDataIfLoaderNotAvailable, Long lifeTime, boolean isEncrypted) {
+      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, boolean isEncrypted) {
     return retrieveRecord.retrieveRecord(providerKey, dynamicKey, dynamicKeyGroup,
         useExpiredDataIfLoaderNotAvailable, lifeTime, isEncrypted);
   }

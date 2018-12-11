@@ -27,8 +27,8 @@ public final class HasRecordExpired {
   public boolean hasRecordExpired(Record record) {
     long now = System.currentTimeMillis();
 
-    Long lifeTime = record.getLifeTime();
-    if (lifeTime == null) return false;
+    long lifeTime = record.getLifeTime();
+    if (lifeTime <= 0) return false;
 
     long expirationDate = record.getTimeAtWhichWasPersisted() + lifeTime;
     return now > expirationDate;

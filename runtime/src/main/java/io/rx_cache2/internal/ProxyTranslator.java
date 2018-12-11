@@ -101,9 +101,9 @@ public final class ProxyTranslator {
     throw new IllegalArgumentException(errorMessage);
   }
 
-  private Long getLifeTimeCache(Method method) {
+  private long getLifeTimeCache(Method method) {
     LifeCache lifeCache = method.getAnnotation(LifeCache.class);
-    if (lifeCache == null) return null;
+    if (lifeCache == null) return 0;
     return lifeCache.timeUnit().toMillis(lifeCache.duration());
   }
 

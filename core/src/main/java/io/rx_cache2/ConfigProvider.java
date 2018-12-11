@@ -21,7 +21,7 @@ import io.rx_cache2.internal.Locale;
 
 public final class ConfigProvider {
   private final String providerKey;
-  private final Boolean useExpiredDataIfNotLoaderAvailable;
+  private final boolean useExpiredDataIfNotLoaderAvailable;
   private final long lifeTime;
   private final boolean requiredDetailedResponse;
   private final boolean expirable;
@@ -30,7 +30,7 @@ public final class ConfigProvider {
   private final Observable loaderObservable;
   private final EvictProvider evictProvider;
 
-  public ConfigProvider(String providerKey, Boolean useExpiredDataIfNotLoaderAvailable,
+  public ConfigProvider(String providerKey, boolean useExpiredDataIfNotLoaderAvailable,
       long lifeTime, boolean requiredDetailedResponse,
       boolean expirable, boolean encrypted, String dynamicKey, String dynamicKeyGroup,
       Observable loaderObservable, EvictProvider evictProvider) {
@@ -83,7 +83,7 @@ public final class ConfigProvider {
     return encrypted;
   }
 
-  public Boolean useExpiredDataIfNotLoaderAvailable() {
+  public boolean useExpiredDataIfNotLoaderAvailable() {
     return useExpiredDataIfNotLoaderAvailable;
   }
 
