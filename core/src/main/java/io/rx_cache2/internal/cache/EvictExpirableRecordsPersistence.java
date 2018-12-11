@@ -25,6 +25,8 @@ import io.rx_cache2.internal.Locale;
 import io.rx_cache2.internal.Memory;
 import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Record;
+import io.rx_cache2.internal.interceptor.Interceptor;
+
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,24 +34,23 @@ import javax.inject.Singleton;
 @Singleton
 public final class EvictExpirableRecordsPersistence extends Action {
   private final Integer maxMgPersistenceCache;
-  private final String encryptKey;
   private static final float PERCENTAGE_MEMORY_STORED_TO_START = 0.95f;
   //VisibleForTesting
   public static final float PERCENTAGE_MEMORY_STORED_TO_STOP = 0.7f;
   private final Observable<String> oEvictingTask;
-  private boolean couldBeExpirableRecords, isEncrypted;
+  private boolean couldBeExpirableRecords;
+  private Class<Interceptor>[] interceptors;
 
   @Inject public EvictExpirableRecordsPersistence(Memory memory, Persistence persistence,
-      Integer maxMgPersistenceCache, String encryptKey) {
+      Integer maxMgPersistenceCache) {
     super(memory, persistence);
     this.maxMgPersistenceCache = maxMgPersistenceCache;
-    this.encryptKey = encryptKey;
     this.couldBeExpirableRecords = true;
     this.oEvictingTask = oEvictingTask();
   }
 
-  Observable<String> startTaskIfNeeded(boolean isEncrypted) {
-    this.isEncrypted = isEncrypted;
+  Observable<String> startTaskIfNeeded(Class<Interceptor>[] interceptors) {
+    this.interceptors = interceptors;
     oEvictingTask.subscribe();
     return oEvictingTask;
   }
@@ -78,9 +79,9 @@ public final class EvictExpirableRecordsPersistence extends Action {
             break;
           }
 
-          Record record = persistence.retrieveRecord(key, isEncrypted, encryptKey);
+          Record record = persistence.retrieveRecord(key, interceptors);
           if (record == null) continue;
-          if (!record.getExpirable()) continue;
+          if (!record.isExpirable()) continue;
 
           persistence.evict(key);
           emitter.onNext(key);

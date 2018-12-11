@@ -37,6 +37,7 @@ public final class Record<T> {
   private final String dataClassName, dataCollectionClassName, dataKeyMapClassName;
   private boolean expirable = true;
   private boolean useExpiredDataIfNotLoaderAvailable;
+  private Class[] interruptors = null;
 
   //LifeTime requires to be stored to be evicted by EvictExpiredRecordsTask when no life time is available without a config provider
   private long lifeTime;
@@ -75,7 +76,6 @@ public final class Record<T> {
       List list = (List) data;
       if (list.size() > 0) {
         dataCollectionClassName = List.class.getName();
-        ;
         dataClassName = list.get(0).getClass().getName();
       } else {
         dataClassName = null;
@@ -148,7 +148,7 @@ public final class Record<T> {
     this.lifeTime = lifeTime;
   }
 
-  public boolean getUseExpiredDataIfNotLoaderAvailable() {
+  public boolean isUseExpiredDataIfNotLoaderAvailable() {
     return useExpiredDataIfNotLoaderAvailable;
   }
 
@@ -176,11 +176,19 @@ public final class Record<T> {
     return dataKeyMapClassName;
   }
 
-  public boolean getExpirable() {
+  public boolean isExpirable() {
     return expirable;
   }
 
   public void setExpirable(boolean expirable) {
     this.expirable = expirable;
+  }
+
+  public Class[] getInterruptors() {
+    return interruptors;
+  }
+
+  public void setInterruptors(Class[] interruptors) {
+    this.interruptors = interruptors;
   }
 }

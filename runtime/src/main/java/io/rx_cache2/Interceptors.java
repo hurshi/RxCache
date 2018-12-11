@@ -16,17 +16,21 @@
 
 package io.rx_cache2;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 /**
- * If set, it will use the key passed as argument to encrypt/decrypt the disk cache automatically by
- * RxCache for those providers that are annotate with {@link Encrypt}.
+ * If set, it determines the period of time during which the associated cache will be exists. If not
+ * set, the cache will not be evicted, as long as it has not been explicitly required using an Evict
+ * class
+ *
+ * @see EvictProvider
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface EncryptKey {
-  String value();
+@Target(METHOD)
+@Retention(RUNTIME)
+public @interface Interceptors {
+    Class[] classes();
 }

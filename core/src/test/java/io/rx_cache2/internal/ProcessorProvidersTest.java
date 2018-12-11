@@ -60,13 +60,13 @@ public class ProcessorProvidersTest extends BaseTest {
 
         io.rx_cache2.internal.Memory memory = new ReferenceMapMemory();
         EvictRecord evictRecord = new EvictRecord(memory,disk);
-        SaveRecord saveRecord = new SaveRecord(memory, disk, 100, new EvictExpirableRecordsPersistence(memory, disk, 100, null), null);
-        RetrieveRecord retrieveRecord = new RetrieveRecord(memory,disk, evictRecord, hasRecordExpired, null);
+        SaveRecord saveRecord = new SaveRecord(memory, disk, 100, new EvictExpirableRecordsPersistence(memory, disk, 100));
+        RetrieveRecord retrieveRecord = new RetrieveRecord(memory,disk, evictRecord, hasRecordExpired);
 
-        evictExpiredRecordsPersistence = new EvictExpiredRecordsPersistence(memory, disk, hasRecordExpired, null);
+        evictExpiredRecordsPersistence = new EvictExpiredRecordsPersistence(memory, disk, hasRecordExpired);
         twoLayersCacheMock = new TwoLayersCache(evictRecord, retrieveRecord, saveRecord);
         getDeepCopy = new GetDeepCopy(memory, disk, Jolyglot$.newInstance());
-        doMigrations = new DoMigrations(disk, null, null);
+        doMigrations = new DoMigrations(disk, null);
     }
 
     @Test public void When_First_Retrieve_Then_Source_Retrieved_Is_Cloud() {
@@ -153,10 +153,10 @@ public class ProcessorProvidersTest extends BaseTest {
         }
 
         ConfigProvider configProvider = new ConfigProvider("mockKey",
-            null, null, detailResponse, true, false,
-            "", "", observable, new EvictProvider(evictCache));
+            false, 0l, detailResponse, true,
+            "", "", observable, new EvictProvider(evictCache),null);
 
-        if (hasCache) twoLayersCacheMock.save("mockKey", "", "", new Mock("message"), configProvider.getLifeTimeMillis(), configProvider.isExpirable(), configProvider.isEncrypted(),false);
+        if (hasCache) twoLayersCacheMock.save("mockKey", "", "", new Mock("message"), configProvider.getLifeTimeMillis(), configProvider.isExpirable(), null,false);
 
         processorProvidersUT = new ProcessorProvidersBehaviour(twoLayersCacheMock, evictExpiredRecordsPersistence,
             getDeepCopy, doMigrations, hasRecordExpired);

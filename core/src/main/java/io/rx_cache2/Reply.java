@@ -27,12 +27,10 @@ package io.rx_cache2;
 public final class Reply<T> {
   private final T data;
   private final Source source;
-  private final boolean isEncrypted;
 
-  public Reply(T data, Source source, boolean isEncrypted) {
+  public Reply(T data, Source source) {
     this.data = data;
     this.source = source;
-    this.isEncrypted = isEncrypted;
   }
 
   public T getData() {
@@ -43,16 +41,11 @@ public final class Reply<T> {
     return source;
   }
 
-  public boolean isEncrypted() {
-    return isEncrypted;
-  }
-  
-  @Override 
+  @Override
   public String toString() {
     return "Reply{" +
       "data=" + data +
       ", source=" + source +
-      ", isEncrypted=" + isEncrypted +
       '}';
   }
 }

@@ -17,10 +17,14 @@
 package io.rx_cache2.internal;
 
 import io.reactivex.Observable;
+import io.rx_cache2.Interceptors;
+import io.rx_cache2.internal.interceptor.Interceptor;
 import io.victoralbertos.jolyglot.JolyglotGenerics;
 import java.io.File;
 import java.lang.reflect.Proxy;
 import java.security.InvalidParameterException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public final class RxCache {
   private final Builder builder;
@@ -50,6 +54,7 @@ public final class RxCache {
     private Integer maxMBPersistenceCache;
     private File cacheDirectory;
     private JolyglotGenerics jolyglot;
+    private Map<Class,Interceptor> interceptors = new LinkedHashMap<>();
 
 
     /**
@@ -60,6 +65,11 @@ public final class RxCache {
      */
     public Builder setMaxMBPersistenceCache(Integer maxMgPersistenceCache) {
       this.maxMBPersistenceCache = maxMgPersistenceCache;
+      return this;
+    }
+
+    public Builder addInterceptor(Interceptor interceptor){
+      interceptors.put(interceptor.getClass(),interceptor);
       return this;
     }
 
@@ -101,6 +111,10 @@ public final class RxCache {
 
     public JolyglotGenerics getJolyglot() {
       return jolyglot;
+    }
+
+    public Map<Class, Interceptor> getInterceptors() {
+      return interceptors;
     }
   }
 }

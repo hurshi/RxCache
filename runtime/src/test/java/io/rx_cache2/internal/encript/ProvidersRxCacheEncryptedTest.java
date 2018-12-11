@@ -18,8 +18,6 @@ package io.rx_cache2.internal.encript;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
-import io.rx_cache2.Encrypt;
-import io.rx_cache2.EncryptKey;
 import io.rx_cache2.ProviderHelper;
 import io.rx_cache2.Reply;
 import io.rx_cache2.Source;
@@ -74,7 +72,6 @@ public class ProvidersRxCacheEncryptedTest {
 
     Reply<List<Mock>> reply = observer.values().get(0);
     assertThat(reply.getSource(), is(Source.PERSISTENCE));
-    assertThat(reply.isEncrypted(), is(true));
   }
 
   @Test
@@ -86,7 +83,6 @@ public class ProvidersRxCacheEncryptedTest {
 
     Reply<List<Mock>> reply = observer.values().get(0);
     assertThat(reply.getSource(), is(Source.PERSISTENCE));
-    assertThat(reply.isEncrypted(), is(false));
 
     observer =
         providersRxCache.getMocksEncryptedWithDetailResponse(ProviderHelper.<List<Mock>>withoutLoader()).test();
@@ -94,7 +90,6 @@ public class ProvidersRxCacheEncryptedTest {
 
     reply = observer.values().get(0);
     assertThat(reply.getSource(), is(Source.PERSISTENCE));
-    assertThat(reply.isEncrypted(), is(true));
   }
 
   private Observable<List<Mock>> createObservableMocks(int size) {
@@ -108,10 +103,9 @@ public class ProvidersRxCacheEncryptedTest {
     return Observable.just(mocks);
   }
 
-  @EncryptKey("myStrongKey-1234")
   public interface ProvidersRxCache {
 
-    @Encrypt Observable<Reply<List<Mock>>> getMocksEncryptedWithDetailResponse(
+    Observable<Reply<List<Mock>>> getMocksEncryptedWithDetailResponse(
         Observable<List<Mock>> mocks);
 
     Observable<Reply<List<Mock>>> getMocksNotEncryptedWithDetailResponse(

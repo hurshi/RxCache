@@ -22,24 +22,23 @@ import io.rx_cache2.internal.Locale;
 import io.rx_cache2.internal.Memory;
 import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Record;
+import io.rx_cache2.internal.interceptor.Interceptor;
 
 public final class SaveRecord extends Action {
   private final Integer maxMgPersistenceCache;
   private final io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence
       evictExpirableRecordsPersistence;
-  private final String encryptKey;
 
   @Inject public SaveRecord(Memory memory, Persistence persistence, Integer maxMgPersistenceCache,
-      io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence evictExpirableRecordsPersistence, String encryptKey) {
+      io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence evictExpirableRecordsPersistence) {
     super(memory, persistence);
     this.maxMgPersistenceCache = maxMgPersistenceCache;
     this.evictExpirableRecordsPersistence = evictExpirableRecordsPersistence;
-    this.encryptKey = encryptKey;
   }
 
   void save(final String providerKey, final String dynamicKey, final String dynamicKeyGroup,
-      final Object data, final long lifeTime, final boolean isExpirable,
-      final boolean isEncrypted,boolean useExpiredDataIfNotLoaderAvailable) {
+            final Object data, final long lifeTime, final boolean isExpirable,
+            final Class<Interceptor>[] interceptors, boolean useExpiredDataIfNotLoaderAvailable) {
     String composedKey = composeKey(providerKey, dynamicKey, dynamicKeyGroup);
 
     Record record = new Record(data, isExpirable, lifeTime , useExpiredDataIfNotLoaderAvailable);
@@ -48,9 +47,9 @@ public final class SaveRecord extends Action {
     if (persistence.storedMB() >= maxMgPersistenceCache) {
       System.out.println(Locale.RECORD_CAN_NOT_BE_PERSISTED_BECAUSE_WOULD_EXCEED_THRESHOLD_LIMIT);
     } else {
-      persistence.saveRecord(composedKey, record, isEncrypted, encryptKey);
+      persistence.saveRecord(composedKey, record, interceptors);
     }
 
-    evictExpirableRecordsPersistence.startTaskIfNeeded(isEncrypted);
+    evictExpirableRecordsPersistence.startTaskIfNeeded(interceptors);
   }
 }

@@ -46,12 +46,12 @@ public class EvictExpirableRecordsPersistenceTest extends BaseTest {
     }
 
     @Test public void When_Not_Reached_Memory_Threshold_Not_Emit() {
-        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, 10, null);
+        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, 10);
 
         populate(true);
         assertThat(disk.allKeys().size(), is(100));
 
-        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(false).test();
+        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(null).test();
         testObserver.awaitTerminalEvent();
         testObserver
             .assertNoErrors()
@@ -62,12 +62,12 @@ public class EvictExpirableRecordsPersistenceTest extends BaseTest {
     @DataPoint public static Integer _5_MB = 5;
     @DataPoint public static Integer _7_MB = 7;
     @Theory @Test public void When_Reached_Memory_Threshold_Perform_Task(int maxMgPersistenceCache) {
-        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, maxMgPersistenceCache, null);
+        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, maxMgPersistenceCache);
 
         populate(true);
         assertThat(disk.allKeys().size(), is(mocksCount()));
 
-        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(false).test();
+        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(null).test();
         testObserver.awaitTerminalEvent();
         testObserver.assertNoErrors();
 
@@ -78,12 +78,12 @@ public class EvictExpirableRecordsPersistenceTest extends BaseTest {
     @Test public void When_Reached_Memory_Threshold_But_Not_Expirable_Records_Do_Not_Evict() {
         int maxMgPersistenceCache = 5;
 
-        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, maxMgPersistenceCache, null);
+        evictExpirableRecordsPersistenceUT = new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, maxMgPersistenceCache);
 
         populate(false);
         assertThat(disk.allKeys().size(), is(mocksCount()));
 
-        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(false).test();
+        TestObserver testObserver = evictExpirableRecordsPersistenceUT.startTaskIfNeeded(null).test();
         testObserver.awaitTerminalEvent();
         testObserver.assertNoErrors();
         //testSubscriber.assertNoValues();
@@ -92,7 +92,7 @@ public class EvictExpirableRecordsPersistenceTest extends BaseTest {
 
         //after first time does not start process again, just return warning message
         testObserver = new TestObserver();
-        evictExpirableRecordsPersistenceUT.startTaskIfNeeded(false).subscribe(testObserver);
+        evictExpirableRecordsPersistenceUT.startTaskIfNeeded(null).subscribe(testObserver);
         testObserver.awaitTerminalEvent();
         testObserver.assertNoErrors();
         testObserver.assertValue(Locale.RECORD_CAN_NOT_BE_EVICTED_BECAUSE_NO_ONE_IS_EXPIRABLE);
@@ -112,7 +112,7 @@ public class EvictExpirableRecordsPersistenceTest extends BaseTest {
             }
 
             Record<List<Mock>> record = new Record<>(mocks, expirable, 1l,false);
-            disk.saveRecord(String.valueOf(i), record, false, null);
+            disk.saveRecord(String.valueOf(i), record,  null);
         }
     }
 

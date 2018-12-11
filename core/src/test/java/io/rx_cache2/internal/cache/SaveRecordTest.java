@@ -47,13 +47,13 @@ public class SaveRecordTest extends BaseTest {
     }
 
     @Test @Theory public void When_Max_Persistence_Exceed_Do_Not_Persists_Data(Integer maxMB) {
-        saveRecordUT = new SaveRecord(memory, disk, maxMB, new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, 100, null), null);
+        saveRecordUT = new SaveRecord(memory, disk, maxMB, new io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence(memory, disk, 100), null);
 
         int records = 250;
 
         //39 megabytes of memory
         for (int i = 0; i < records; i++) {
-            saveRecordUT.save(i+"", "", "", createMocks(records), 0l, true, false,false);
+            saveRecordUT.save(i+"", "", "", createMocks(records), 0l, true, null,false);
         }
 
         assertTrue("storedMB minor or equal than " + maxMB, disk.storedMB() <= maxMB);

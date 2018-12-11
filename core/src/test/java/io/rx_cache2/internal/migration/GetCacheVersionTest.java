@@ -41,7 +41,7 @@ public class GetCacheVersionTest extends BaseTest {
     }
 
     @Test public void When_Version_Specified_Then_Get_It() {
-        disk.save(io.rx_cache2.internal.migration.GetCacheVersion.KEY_CACHE_VERSION, 5, false, null);
+        disk.save(io.rx_cache2.internal.migration.GetCacheVersion.KEY_CACHE_VERSION, 5, null);
 
         TestObserver<Integer> versionTestObserver = getCacheVersionUT.react().test();
         versionTestObserver.awaitTerminalEvent();

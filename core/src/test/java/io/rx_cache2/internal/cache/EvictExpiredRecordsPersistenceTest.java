@@ -29,15 +29,15 @@ public class EvictExpiredRecordsPersistenceTest extends BaseTest {
         memory = new ReferenceMapMemory();
         twoLayersCache = new TwoLayersCache(evictRecord(memory), retrieveRecord(memory), saveRecord(memory));
         hasRecordExpired = new io.rx_cache2.internal.cache.HasRecordExpired();
-        evictExpiredRecordsPersistenceUT = new EvictExpiredRecordsPersistence(memory, disk, hasRecordExpired, null);
+        evictExpiredRecordsPersistenceUT = new EvictExpiredRecordsPersistence(memory, disk, hasRecordExpired);
     }
 
     @Test public void Evict_Just_Expired_Records() {
         int recordsCount = 100;
 
         for (int i = 0; i < recordsCount/2; i++) {
-            twoLayersCache.save(i+"_expired", "", "", new Mock(i+"_expired"), ONE_SECOND_LIFE, true, false,false);
-            twoLayersCache.save(i+"_live", "", "", new Mock(i+"_live"), THIRTY_SECOND_LIFE, true, false,false);
+            twoLayersCache.save(i+"_expired", "", "", new Mock(i+"_expired"), ONE_SECOND_LIFE, true, null,false);
+            twoLayersCache.save(i+"_live", "", "", new Mock(i+"_live"), THIRTY_SECOND_LIFE, true, null,false);
         }
 
         waitTime(MORE_THAN_ONE_SECOND_LIFE);
@@ -53,14 +53,14 @@ public class EvictExpiredRecordsPersistenceTest extends BaseTest {
 
         for (String key : allKeys) {
             key = key.substring(0, key.indexOf("$"));
-            Record<Mock> record = twoLayersCache.retrieve(key, "", "", false, THIRTY_SECOND_LIFE, false);
+            Record<Mock> record = twoLayersCache.retrieve(key, "", "", false, THIRTY_SECOND_LIFE, null);
             assert(record.getData().getMessage().contains("live"));
             assert(!record.getData().getMessage().contains("expired"));
         }
     }
 
     private io.rx_cache2.internal.cache.SaveRecord saveRecord(Memory memory) {
-        return new SaveRecord(memory, disk, 100, new EvictExpirableRecordsPersistence(memory, disk, 100, null), null);
+        return new SaveRecord(memory, disk, 100, new EvictExpirableRecordsPersistence(memory, disk, 100));
     }
 
     private io.rx_cache2.internal.cache.EvictRecord evictRecord(Memory memory) {
@@ -68,6 +68,6 @@ public class EvictExpiredRecordsPersistenceTest extends BaseTest {
     }
 
     private io.rx_cache2.internal.cache.RetrieveRecord retrieveRecord(Memory memory) {
-        return new io.rx_cache2.internal.cache.RetrieveRecord(memory, disk, new EvictRecord(memory, disk), new HasRecordExpired(), null);
+        return new io.rx_cache2.internal.cache.RetrieveRecord(memory, disk, new EvictRecord(memory, disk), new HasRecordExpired());
     }
 }

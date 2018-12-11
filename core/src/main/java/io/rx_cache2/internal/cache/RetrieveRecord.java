@@ -22,22 +22,21 @@ import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Record;
 import io.rx_cache2.Source;
 import io.rx_cache2.internal.Memory;
+import io.rx_cache2.internal.interceptor.Interceptor;
 
 public final class RetrieveRecord extends Action {
   private final EvictRecord evictRecord;
   private final HasRecordExpired hasRecordExpired;
-  private final String encryptKey;
 
   @Inject public RetrieveRecord(Memory memory, Persistence persistence, EvictRecord evictRecord,
-      HasRecordExpired hasRecordExpired, String encryptKey) {
+      HasRecordExpired hasRecordExpired) {
     super(memory, persistence);
     this.evictRecord = evictRecord;
     this.hasRecordExpired = hasRecordExpired;
-    this.encryptKey = encryptKey;
   }
 
   <T> Record<T> retrieveRecord(String providerKey, String dynamicKey, String dynamicKeyGroup,
-      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, boolean isEncrypted) {
+      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, Class<Interceptor>[] interceptors) {
     String composedKey = composeKey(providerKey, dynamicKey, dynamicKeyGroup);
 
     Record<T> record = memory.getIfPresent(composedKey);
@@ -46,7 +45,7 @@ public final class RetrieveRecord extends Action {
       record.setSource(Source.MEMORY);
     } else {
       try {
-        record = persistence.retrieveRecord(composedKey, isEncrypted, encryptKey);
+        record = persistence.retrieveRecord(composedKey, interceptors);
         record.setSource(Source.PERSISTENCE);
         memory.put(composedKey, record);
       } catch (Exception ignore) {

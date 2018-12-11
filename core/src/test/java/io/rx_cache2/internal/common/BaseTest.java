@@ -16,14 +16,12 @@
 
 package io.rx_cache2.internal.common;
 
-import io.rx_cache2.internal.Jolyglot$;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import io.rx_cache2.internal.Disk;
-import io.rx_cache2.internal.encrypt.BuiltInEncryptor;
-import io.rx_cache2.internal.encrypt.FileEncryptor;
+import io.rx_cache2.internal.Jolyglot$;
 
 
 public class BaseTest {
@@ -31,8 +29,7 @@ public class BaseTest {
     @Rule public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @Before public void setUp() {
-        disk = new Disk(temporaryFolder.getRoot(),
-                new FileEncryptor(new BuiltInEncryptor()), Jolyglot$.newInstance());
+        disk = new Disk(temporaryFolder.getRoot(), Jolyglot$.newInstance(),null);
     }
 
     protected void waitTime(long millis) {

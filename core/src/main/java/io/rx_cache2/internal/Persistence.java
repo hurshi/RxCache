@@ -18,6 +18,8 @@ package io.rx_cache2.internal;
 
 import java.util.List;
 
+import io.rx_cache2.internal.interceptor.Interceptor;
+
 /**
  * Provides the persistence layer for the cache A default implementation which store the objects in
  * disk is supplied:
@@ -31,20 +33,16 @@ public interface Persistence {
    *
    * @param key The key associated with the object to be persisted
    * @param object The object to be persisted
-   * @param isEncrypted If the persisted record is encrypted or not.
-   * @param encryptKey The key used to encrypt/decrypt the record to be persisted. 
    */
-  void save(String key, Object object, boolean isEncrypted, String encryptKey);
+  void save(String key, Object object, Class<Interceptor>[] interceptors);
 
   /**
    * Save the data supplied based on a certain mechanism which provides persistence somehow
    *
    * @param key The key associated with the record to be persisted
    * @param record The record to be persisted
-   * @param isEncrypted If the persisted record is encrypted or not.
-   * @param encryptKey The key used to encrypt/decrypt the record to be persisted.
    */
-  void saveRecord(String key, Record record, boolean isEncrypted, String encryptKey);
+  void saveRecord(String key, Record record, Class<Interceptor>[] interceptors);
 
   /**
    * Delete the data associated with its particular key
@@ -73,19 +71,15 @@ public interface Persistence {
    *
    * @param key The key associated with the object to be retrieved from persistence
    * @param <T> The data to be retrieved
-   * @param isEncrypted If the persisted record is encrypted or not.
-   * @param encryptKey The key used to encrypt/decrypt the record to be persisted.
    * @see Record
    */
-  <T> T retrieve(String key, Class<T> clazz, boolean isEncrypted, String encryptKey);
+  <T> T retrieve(String key, Class<T> clazz);
 
   /**
    * Retrieve the record associated with its particular key
    *
    * @param key The key associated with the Record to be retrieved from persistence
-   * @param isEncrypted If the persisted record is encrypted or not.
-   * @param encryptKey The key used to encrypt/decrypt the record to be persisted.
    * @see Record
    */
-  <T> Record<T> retrieveRecord(String key, boolean isEncrypted, String encryptKey);
+  <T> Record<T> retrieveRecord(String key, Class<Interceptor>[] interceptors);
 }

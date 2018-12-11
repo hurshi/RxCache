@@ -27,26 +27,19 @@ import javax.inject.Singleton;
 @Singleton
 public final class EvictExpiredRecordsPersistence extends Action {
   private final HasRecordExpired hasRecordExpired;
-  private final String encryptKey;
 
   @Inject public EvictExpiredRecordsPersistence(Memory memory, Persistence persistence,
-      HasRecordExpired hasRecordExpired, String encryptKey) {
+      HasRecordExpired hasRecordExpired) {
     super(memory, persistence);
     this.hasRecordExpired = hasRecordExpired;
-    this.encryptKey = encryptKey;
   }
 
   public Observable<Integer> startEvictingExpiredRecords() {
     List<String> allKeys = persistence.allKeys();
 
     for (String key : allKeys) {
-      Record record = persistence.retrieveRecord(key, false, encryptKey);
-
-      if (record == null && encryptKey != null && !encryptKey.isEmpty()) {
-        record = persistence.retrieveRecord(key, true, encryptKey);
-      }
-
-      if (record != null && hasRecordExpired.hasRecordExpired(record) && !record.getUseExpiredDataIfNotLoaderAvailable()) {
+      Record record = persistence.retrieveRecord(key, null);
+      if (record != null && hasRecordExpired.hasRecordExpired(record) && !record.isUseExpiredDataIfNotLoaderAvailable()) {
         persistence.evict(key);
       }
     }

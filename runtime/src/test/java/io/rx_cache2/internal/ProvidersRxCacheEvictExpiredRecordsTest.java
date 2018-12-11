@@ -19,8 +19,6 @@ package io.rx_cache2.internal;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.rx_cache2.DynamicKey;
-import io.rx_cache2.Encrypt;
-import io.rx_cache2.EncryptKey;
 import io.rx_cache2.LifeCache;
 import io.rx_cache2.internal.common.BaseTestEvictingTask;
 import java.io.File;
@@ -123,14 +121,12 @@ public class ProvidersRxCacheEvictExpiredRecordsTest extends BaseTestEvictingTas
     }
   }
 
-  @EncryptKey("myStrongKey-1234")
   private interface ProvidersRxCache {
     Observable<List<io.rx_cache2.internal.Mock>> getMocksPaginate(Observable<List<io.rx_cache2.internal.Mock>> mocks, DynamicKey page);
 
     @LifeCache(duration = 1, timeUnit = TimeUnit.MILLISECONDS)
     Observable<List<io.rx_cache2.internal.Mock>> getEphemeralMocksPaginate(Observable<List<io.rx_cache2.internal.Mock>> mocks, DynamicKey page);
 
-    @Encrypt
     @LifeCache(duration = 1, timeUnit = TimeUnit.MILLISECONDS)
     Observable<List<io.rx_cache2.internal.Mock>> getEphemeralEncryptedMocksPaginate(Observable<List<io.rx_cache2.internal.Mock>> mocks,
         DynamicKey page);

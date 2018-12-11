@@ -25,25 +25,25 @@ public final class ConfigProvider {
   private final long lifeTime;
   private final boolean requiredDetailedResponse;
   private final boolean expirable;
-  private final boolean encrypted;
   private final String dynamicKey, dynamicKeyGroup;
   private final Observable loaderObservable;
   private final EvictProvider evictProvider;
+  private final Class[] interruptors;
 
   public ConfigProvider(String providerKey, boolean useExpiredDataIfNotLoaderAvailable,
       long lifeTime, boolean requiredDetailedResponse,
-      boolean expirable, boolean encrypted, String dynamicKey, String dynamicKeyGroup,
-      Observable loaderObservable, EvictProvider evictProvider) {
+      boolean expirable, String dynamicKey, String dynamicKeyGroup,
+      Observable loaderObservable, EvictProvider evictProvider,Class[] interruptors) {
     this.providerKey = providerKey;
     this.useExpiredDataIfNotLoaderAvailable = useExpiredDataIfNotLoaderAvailable;
     this.lifeTime = lifeTime;
     this.requiredDetailedResponse = requiredDetailedResponse;
     this.expirable = expirable;
-    this.encrypted = encrypted;
     this.dynamicKey = dynamicKey;
     this.dynamicKeyGroup = dynamicKeyGroup;
     this.loaderObservable = loaderObservable;
     this.evictProvider = evictProvider;
+    this.interruptors = interruptors;
     checkIntegrity();
   }
 
@@ -79,12 +79,12 @@ public final class ConfigProvider {
     return expirable;
   }
 
-  public boolean isEncrypted() {
-    return encrypted;
-  }
-
   public boolean useExpiredDataIfNotLoaderAvailable() {
     return useExpiredDataIfNotLoaderAvailable;
+  }
+
+  public Class[] getInterruptors() {
+    return interruptors;
   }
 
   private void checkIntegrity() {

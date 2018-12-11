@@ -16,6 +16,10 @@
 
 package io.rx_cache2.internal;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -23,19 +27,13 @@ import io.reactivex.Single;
 import io.rx_cache2.ConfigProvider;
 import io.rx_cache2.DynamicKey;
 import io.rx_cache2.DynamicKeyGroup;
-import io.rx_cache2.Encrypt;
 import io.rx_cache2.EvictProvider;
 import io.rx_cache2.Expirable;
+import io.rx_cache2.Interceptors;
 import io.rx_cache2.LifeCache;
 import io.rx_cache2.ProviderKey;
 import io.rx_cache2.Reply;
 import io.rx_cache2.UseExpiredDataIfNotLoaderAvailable;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import javax.inject.Inject;
 
 public final class ProxyTranslator {
   private final Map<Method, ConfigProvider> configProviderMethodCache;
@@ -49,10 +47,10 @@ public final class ProxyTranslator {
 
     ConfigProvider configProvider = new ConfigProvider(prev.getProviderKey(),
             prev.useExpiredDataIfNotLoaderAvailable(), prev.getLifeTimeMillis(), prev.requiredDetailedResponse(), prev.isExpirable(),
-        prev.isEncrypted(), getDynamicKey(method, objectsMethod),
+        getDynamicKey(method, objectsMethod),
         getDynamicKeyGroup(method, objectsMethod),
         getLoaderObservable(method, objectsMethod),
-        evictProvider(method, objectsMethod));
+        evictProvider(method, objectsMethod), prev.getInterruptors());
 
     return configProvider;
   }
@@ -115,13 +113,13 @@ public final class ProxyTranslator {
 
   private boolean useExpiredDataIfNotLoaderAvailable(Method method) {
     UseExpiredDataIfNotLoaderAvailable useExpiredDataIfNotLoaderAvailable = method.getAnnotation(UseExpiredDataIfNotLoaderAvailable.class);
-    if (useExpiredDataIfNotLoaderAvailable != null) return true;
-    return false;
+    return useExpiredDataIfNotLoaderAvailable != null;
   }
-  private boolean isEncrypted(Method method) {
-    Encrypt encrypt = method.getAnnotation(Encrypt.class);
-    if (encrypt != null) return true;
-    return false;
+
+  private Class[] getInterceptors(Method method){
+    Interceptors interceptors = method.getAnnotation(Interceptors.class);
+    if(interceptors != null) return interceptors.classes();
+    return null;
   }
 
   private boolean requiredDetailResponse(Method method) {
@@ -174,8 +172,8 @@ public final class ProxyTranslator {
       if (result == null) {
         result = new ConfigProvider(getProviderKey(method),
             useExpiredDataIfNotLoaderAvailable(method), getLifeTimeCache(method),
-            requiredDetailResponse(method), getExpirable(method), isEncrypted(method),
-            null, null, null, null);
+            requiredDetailResponse(method), getExpirable(method),
+            null, null, null, null,getInterceptors(method));
         configProviderMethodCache.put(method, result);
       }
     }

@@ -25,6 +25,9 @@ dependencies {
     compile 'com.github.VictorAlbertos.Jolyglot:api:0.0.4'
     compile project(':core')
 
+//    apt "com.google.dagger:dagger-compiler:2.19"
+//    implementation "com.google.dagger:dagger:2.19"
+
     testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
     testCompile 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.4'
     testCompile 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.4'

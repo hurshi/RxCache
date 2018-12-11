@@ -27,7 +27,7 @@ final class GetCacheVersion extends CacheVersion {
   }
 
   Observable<Integer> react() {
-    Integer currentVersion = persistence.retrieve(KEY_CACHE_VERSION, Integer.class, false, null);
+    Integer currentVersion = persistence.retrieve(KEY_CACHE_VERSION, Integer.class);
     currentVersion = currentVersion == null ? 0 : currentVersion;
     return Observable.just(currentVersion);
   }

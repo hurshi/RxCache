@@ -21,7 +21,6 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
-import io.rx_cache2.EncryptKey;
 import io.rx_cache2.Migration;
 import io.rx_cache2.MigrationCache;
 import io.rx_cache2.SchemeMigration;
@@ -37,19 +36,16 @@ public final class ProxyProviders implements InvocationHandler {
   private final ProxyTranslator proxyTranslator;
 
   public ProxyProviders(RxCache.Builder builder, Class<?> providersClass) {
-    processorProviders = DaggerRxCacheComponent.builder()
-        .rxCacheModule(new RxCacheModule(builder.getCacheDirectory(),
-            builder.getMaxMBPersistenceCache(), getEncryptKey(providersClass),
-            getMigrations(providersClass), builder.getJolyglot()))
-        .build().providers();
+      processorProviders = DaggerRxCacheComponent.builder()
+              .rxCacheModule(new RxCacheModule(
+                      builder.getCacheDirectory(),
+                      builder.getMaxMBPersistenceCache(),
+                      getMigrations(providersClass),
+                      builder.getJolyglot(),
+                      builder.getInterceptors()))
+              .build().providers();
 
     proxyTranslator = new ProxyTranslator();
-  }
-
-  public String getEncryptKey(Class<?> providersClass) {
-    EncryptKey encryptKey = providersClass.getAnnotation(EncryptKey.class);
-    if (encryptKey == null) return null;
-    return encryptKey.value();
   }
 
   public List<MigrationCache> getMigrations(Class<?> providersClass) {

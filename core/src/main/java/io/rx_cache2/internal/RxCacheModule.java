@@ -16,34 +16,36 @@
 
 package io.rx_cache2.internal;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import io.rx_cache2.MigrationCache;
 import io.rx_cache2.internal.cache.memory.ReferenceMapMemory;
-import io.rx_cache2.internal.encrypt.BuiltInEncryptor;
-import io.rx_cache2.internal.encrypt.Encryptor;
+import io.rx_cache2.internal.interceptor.Interceptor;
 import io.victoralbertos.jolyglot.JolyglotGenerics;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Singleton;
 
 @Module
 public final class RxCacheModule {
   private final File cacheDirectory;
   private final Integer maxMgPersistenceCache;
-  private final String encryptKey;
   private final List<MigrationCache> migrations;
   private final JolyglotGenerics jolyglot;
+  private final Map<Class,Interceptor> interceptors;
 
   public RxCacheModule(File cacheDirectory,
-      Integer maxMgPersistenceCache,
-      String encryptKey, List<MigrationCache> migrations, JolyglotGenerics jolyglot) {
+                       Integer maxMgPersistenceCache, List<MigrationCache> migrations, JolyglotGenerics jolyglot,
+                       Map<Class,Interceptor> interceptors) {
     this.cacheDirectory = cacheDirectory;
     this.maxMgPersistenceCache = maxMgPersistenceCache;
-    this.encryptKey = encryptKey;
     this.migrations = migrations;
     this.jolyglot = jolyglot;
+    this.interceptors = interceptors;
   }
 
   @Singleton @Provides File provideCacheDirectory() {
@@ -54,20 +56,14 @@ public final class RxCacheModule {
     return disk;
   }
 
+  @Singleton @Provides Map<Class,Interceptor> provideInterceptors(){return interceptors;}
+
   @Singleton @Provides io.rx_cache2.internal.Memory provideMemory() {
     return new ReferenceMapMemory();
   }
 
   @Singleton @Provides Integer maxMbPersistenceCache() {
     return maxMgPersistenceCache != null ? maxMgPersistenceCache : 100;
-  }
-
-  @Singleton @Provides Encryptor provideEncryptor() {
-    return new BuiltInEncryptor();
-  }
-
-  @Singleton @Provides String provideEncryptKey() {
-    return encryptKey != null ? encryptKey : "";
   }
 
   @Singleton @Provides List<MigrationCache> provideMigrations() {

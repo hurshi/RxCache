@@ -33,14 +33,13 @@ public final class DoMigrations {
   private final GetClassesToEvictFromMigrations getClassesToEvictFromMigrations;
   private final List<MigrationCache> migrations;
 
-  @Inject public DoMigrations(Persistence persistence, List<MigrationCache> migrations,
-      String encryptKey) {
+  @Inject public DoMigrations(Persistence persistence, List<MigrationCache> migrations) {
     this.getClassesToEvictFromMigrations = new GetClassesToEvictFromMigrations();
     this.getCacheVersion = new io.rx_cache2.internal.migration.GetCacheVersion(persistence);
     this.getPendingMigrations = new io.rx_cache2.internal.migration.GetPendingMigrations();
     this.migrations = migrations;
     this.upgradeCacheVersion = new io.rx_cache2.internal.migration.UpgradeCacheVersion(persistence);
-    this.deleteRecordMatchingClassName = new io.rx_cache2.internal.migration.DeleteRecordMatchingClassName(persistence, encryptKey);
+    this.deleteRecordMatchingClassName = new io.rx_cache2.internal.migration.DeleteRecordMatchingClassName(persistence);
   }
 
   public Observable<Integer> react() {

@@ -22,12 +22,10 @@ import javax.inject.Inject;
 
 public final class DeleteRecordMatchingClassName {
   private final io.rx_cache2.internal.Persistence persistence;
-  private final String encryptKey;
   private List<Class> classes;
 
-  @Inject public DeleteRecordMatchingClassName(io.rx_cache2.internal.Persistence persistence, String encryptKey) {
+  @Inject public DeleteRecordMatchingClassName(io.rx_cache2.internal.Persistence persistence) {
     this.persistence = persistence;
-    this.encryptKey = encryptKey;
   }
 
   public DeleteRecordMatchingClassName with(List<Class> classes) {
@@ -41,12 +39,7 @@ public final class DeleteRecordMatchingClassName {
     List<String> allKeys = persistence.allKeys();
 
     for (String key : allKeys) {
-      io.rx_cache2.internal.Record record = persistence.retrieveRecord(key, false, encryptKey);
-
-      if (record == null) {
-        record = persistence.retrieveRecord(key, true, encryptKey);
-      }
-
+      io.rx_cache2.internal.Record record = persistence.retrieveRecord(key,  null);
       if (evictRecord(record)) {
         persistence.evict(key);
       }

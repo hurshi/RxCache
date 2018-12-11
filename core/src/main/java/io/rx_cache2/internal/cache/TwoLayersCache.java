@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.rx_cache2.internal.Record;
+import io.rx_cache2.internal.interceptor.Interceptor;
 
 @Singleton
 public final class TwoLayersCache {
@@ -35,15 +36,15 @@ public final class TwoLayersCache {
   }
 
   public <T> Record<T> retrieve(String providerKey, String dynamicKey, String dynamicKeyGroup,
-      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, boolean isEncrypted) {
+      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, Class<Interceptor>[] interceptors) {
     return retrieveRecord.retrieveRecord(providerKey, dynamicKey, dynamicKeyGroup,
-        useExpiredDataIfLoaderNotAvailable, lifeTime, isEncrypted);
+        useExpiredDataIfLoaderNotAvailable, lifeTime, interceptors);
   }
 
   public void save(String providerKey, String dynamicKey, String dynamicKeyGroup, Object data,
-      long lifeTime, boolean isExpirable, boolean isEncrypted,boolean useExpiredDataIfNotLoaderAvailable) {
+                   long lifeTime, boolean isExpirable, Class<Interceptor>[] interceptors, boolean useExpiredDataIfNotLoaderAvailable) {
     saveRecord.save(providerKey, dynamicKey, dynamicKeyGroup, data, lifeTime, isExpirable,
-        isEncrypted,useExpiredDataIfNotLoaderAvailable);
+        interceptors,useExpiredDataIfNotLoaderAvailable);
   }
 
   public void evictProviderKey(final String providerKey) {

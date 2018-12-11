@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
 
     private CommonCache getCommonCache() {
         return new RxCache.Builder()
+                .addInterceptor(new EncryptionInterceptor())
                 .persistence(MainActivity.this.getExternalCacheDir(), new GsonSpeaker())
                 .using(CommonCache.class);
     }
