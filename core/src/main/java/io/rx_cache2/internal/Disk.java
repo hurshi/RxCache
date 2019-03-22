@@ -16,6 +16,8 @@
 
 package io.rx_cache2.internal;
 
+import org.apache.commons.codec.binary.Base64;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -33,8 +35,6 @@ import javax.inject.Inject;
 
 import io.rx_cache2.internal.interceptor.Interceptor;
 import io.victoralbertos.jolyglot.JolyglotGenerics;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * Save objects in disk and evict them too. It uses Gson as json parser.
@@ -44,16 +44,12 @@ public final class Disk implements Persistence {
     private final JolyglotGenerics jolyglot;
     private final Map<Class, Interceptor> interceptorMap;
     private final String QUOTES = "\"";
-    private final BASE64Encoder base64Encoder;
-    private final BASE64Decoder base64Decoder;
 
     @Inject
     public Disk(File cacheDirectory, JolyglotGenerics jolyglot, Map<Class, Interceptor> interceptors) {
         this.cacheDirectory = cacheDirectory;
         this.jolyglot = jolyglot;
         this.interceptorMap = interceptors;
-        this.base64Encoder = new BASE64Encoder();
-        this.base64Decoder = new BASE64Decoder();
     }
 
     /**
@@ -131,7 +127,7 @@ public final class Disk implements Persistence {
                     }
                 }
                 StringBuilder userDataBase64Encoded = new StringBuilder(QUOTES)
-                        .append(base64Encoder.encode(userDataIntercepted.getBytes(Charset.defaultCharset())))
+                        .append(Base64.encodeBase64String(userDataIntercepted.getBytes(Charset.defaultCharset())))
                         .append(QUOTES);
                 wrapperJSONSerialized = wrapperJSONSerialized.replace(userData, userDataBase64Encoded);
             }
@@ -234,7 +230,7 @@ public final class Disk implements Persistence {
 
             if (null != interceptors && interceptors.length > 0) {
                 String userDataBase64Encoded = diskRecord.getData().toString();
-                String userDataBase64Decoded = new String(base64Decoder.decodeBuffer(userDataBase64Encoded), Charset.defaultCharset());
+                String userDataBase64Decoded = new String(Base64.decodeBase64(userDataBase64Encoded), Charset.defaultCharset());
                 for (Class itClass : interceptors) {
                     Interceptor it = getInterceptorByClass(itClass);
                     if (null != it) {

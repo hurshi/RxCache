@@ -1,35 +1,15 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-group = 'com.github.VictorAlbertos'
-version='1.8.0-2.x'
+apply plugin: 'java-library'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
-    compile 'com.github.VictorAlbertos.Jolyglot:api:0.0.4'
-    compile project(':core')
-
-//    apt "com.google.dagger:dagger-compiler:2.19"
-//    implementation "com.google.dagger:dagger:2.19"
-
-    testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
-    testCompile 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.4'
-    testCompile 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.4'
-    testCompile 'junit:junit:4.12'
+    implementation 'com.github.VictorAlbertos.Jolyglot:api:0.0.4'
+    api project(':core')
+    implementation "com.google.dagger:dagger:2.21"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.4'
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.4'
+    testImplementation 'junit:junit:4.12'
 }

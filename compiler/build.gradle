@@ -1,36 +1,15 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-group = 'com.github.VictorAlbertos'
-version = '1.8.0-2.x'
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+apply plugin: 'java-library'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
-    //compile files("${System.properties['java.home']}/../lib/tools.jar")
-    compile files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+    implementation files(org.gradle.internal.jvm.Jvm.current().getToolsJar())
+    implementation project(':runtime')
+    implementation 'com.google.auto.service:auto-service:1.0-rc4'
+    implementation 'com.squareup:javapoet:1.11.1'
+    implementation "com.google.dagger:dagger:2.21"
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
 
-    compile project(':core')
-    compile project(':runtime')
-
-    compile 'com.google.auto.service:auto-service:1.0-rc4'
-    compile 'com.squareup:javapoet:1.11.1'
-
-    testCompile "junit:junit:4.12"
-    testCompile "com.google.testing.compile:compile-testing:0.15"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+    testImplementation "junit:junit:4.12"
+    testImplementation "com.google.testing.compile:compile-testing:0.15"
 }

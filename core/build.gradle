@@ -1,72 +1,20 @@
-apply plugin: 'java'
-apply plugin: 'base'
+apply plugin: 'java-library'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.4"
-        classpath 'net.sf.proguard:proguard-gradle:6.0.3'
-    }
-}
-
-apply plugin: 'idea'
-apply plugin: "net.ltgt.apt"
-apply plugin: 'maven'
-
-group = 'com.github.VictorAlbertos'
-version = '1.8.0-2.x'
-
-configurations {
-    provided
-}
-
-sourceSets {
-    main {
-        compileClasspath += configurations.provided
-        runtimeClasspath += configurations.provided
-    }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-javadoc {
-    failOnError = false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
-    apt "com.google.dagger:dagger-compiler:2.19"
-    compile "com.google.dagger:dagger:2.19"
-    compile "org.glassfish:javax.annotation:10.0-b28"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.21"
+    implementation "com.google.dagger:dagger:2.21"
+    implementation "org.glassfish:javax.annotation:10.0-b28"
+    implementation "commons-codec:commons-codec:1.12"
 
-    compile 'io.reactivex.rxjava2:rxjava:2.2.4'
-    compile 'com.github.VictorAlbertos.Jolyglot:api:0.0.4'
-    compile 'com.squareup.okio:okio:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'com.github.VictorAlbertos.Jolyglot:api:0.0.4'
+    implementation 'com.squareup.okio:okio:2.1.0'
 
-    testCompile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
-    testCompile 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.4'
-    testCompile 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.4'
-    testCompile "junit:junit:4.12"
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:gson:0.0.4'
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:jackson:0.0.4'
+    testImplementation 'com.github.VictorAlbertos.Jolyglot:moshi:0.0.4'
+    testImplementation "junit:junit:4.12"
 }
