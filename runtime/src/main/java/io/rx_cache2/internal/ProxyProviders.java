@@ -16,6 +16,13 @@
 
 package io.rx_cache2.internal;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -24,12 +31,6 @@ import io.reactivex.Single;
 import io.rx_cache2.Migration;
 import io.rx_cache2.MigrationCache;
 import io.rx_cache2.SchemeMigration;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 public final class ProxyProviders implements InvocationHandler {
   private final io.rx_cache2.internal.ProcessorProviders processorProviders;

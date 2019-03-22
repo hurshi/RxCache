@@ -16,6 +16,15 @@
 
 package io.rx_cache2.internal.cache;
 
+import org.junit.Test;
+import org.junit.experimental.theories.DataPoint;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.observers.TestObserver;
 import io.rx_cache2.internal.Locale;
 import io.rx_cache2.internal.Memory;
@@ -23,13 +32,6 @@ import io.rx_cache2.internal.Mock;
 import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.cache.memory.ReferenceMapMemory;
 import io.rx_cache2.internal.common.BaseTest;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoint;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

@@ -2,7 +2,6 @@ package victoralbertos.io.android;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 

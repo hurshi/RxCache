@@ -1,17 +1,19 @@
 package io.rx_cache2.internal.migration;
 
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.rx_cache2.Migration;
 import io.rx_cache2.SchemeMigration;
 import io.rx_cache2.internal.Jolyglot$;
 import io.rx_cache2.internal.RxCache;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

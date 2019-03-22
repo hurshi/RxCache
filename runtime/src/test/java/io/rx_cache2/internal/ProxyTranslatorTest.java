@@ -16,6 +16,11 @@
 
 package io.rx_cache2.internal;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import java.lang.reflect.Method;
+
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -26,9 +31,6 @@ import io.rx_cache2.DynamicKeyGroup;
 import io.rx_cache2.EvictDynamicKey;
 import io.rx_cache2.EvictDynamicKeyGroup;
 import io.rx_cache2.EvictProvider;
-import java.lang.reflect.Method;
-import org.junit.Before;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

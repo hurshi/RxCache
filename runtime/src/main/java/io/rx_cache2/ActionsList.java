@@ -16,11 +16,12 @@
 
 package io.rx_cache2;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 /**
  * Provides a set of actions in order to perform write operations on lists with providers in a more

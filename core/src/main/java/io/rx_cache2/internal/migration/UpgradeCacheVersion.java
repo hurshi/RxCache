@@ -16,10 +16,12 @@
 
 package io.rx_cache2.internal.migration;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.rx_cache2.internal.Persistence;
-import java.util.List;
-import javax.inject.Inject;
 
 final class UpgradeCacheVersion extends CacheVersion {
   private List<io.rx_cache2.MigrationCache> migrations;

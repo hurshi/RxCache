@@ -16,6 +16,8 @@
 
 package io.rx_cache2.samples;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.rx_cache2.Actionable;
 import io.rx_cache2.DynamicKey;
@@ -24,7 +26,6 @@ import io.rx_cache2.EvictDynamicKey;
 import io.rx_cache2.EvictDynamicKeyGroup;
 import io.rx_cache2.EvictProvider;
 import io.rx_cache2.Mock;
-import java.util.List;
 
 public interface RxProviders {
   @Actionable Observable<List<Mock>> getMocksEvictProvider(Observable<List<Mock>> oMocks,

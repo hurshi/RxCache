@@ -16,20 +16,22 @@
 
 package io.rx_cache2.internal;
 
-import io.reactivex.Observable;
-import io.reactivex.observers.TestObserver;
-import io.rx_cache2.DynamicKey;
-import io.rx_cache2.LifeCache;
-import io.rx_cache2.internal.common.BaseTestEvictingTask;
-import java.io.File;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
+
+import java.io.File;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
+import io.rx_cache2.DynamicKey;
+import io.rx_cache2.LifeCache;
+import io.rx_cache2.internal.common.BaseTestEvictingTask;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

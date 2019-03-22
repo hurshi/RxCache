@@ -16,13 +16,15 @@
 
 package io.rx_cache2.internal.cache;
 
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.rx_cache2.internal.Memory;
 import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Record;
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public final class EvictExpiredRecordsPersistence extends Action {

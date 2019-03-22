@@ -24,12 +24,15 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import io.reactivex.Observable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
+
+import io.reactivex.Observable;
 
 final class BrewJavaFile {
 

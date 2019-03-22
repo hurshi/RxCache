@@ -16,6 +16,16 @@
 
 package io.rx_cache2.internal.encript;
 
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 import io.rx_cache2.ProviderHelper;
@@ -24,14 +34,6 @@ import io.rx_cache2.Source;
 import io.rx_cache2.internal.Jolyglot$;
 import io.rx_cache2.internal.Mock;
 import io.rx_cache2.internal.RxCache;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

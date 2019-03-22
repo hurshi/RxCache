@@ -16,9 +16,10 @@
 
 package io.rx_cache2.internal.migration;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.rx_cache2.internal.Persistence;
-import javax.inject.Inject;
 
 final class GetCacheVersion extends CacheVersion {
 

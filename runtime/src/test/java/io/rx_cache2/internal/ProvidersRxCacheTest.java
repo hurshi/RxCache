@@ -18,6 +18,21 @@ package io.rx_cache2.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.hamcrest.CoreMatchers;
+import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runners.MethodSorters;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.TestObserver;
@@ -26,18 +41,6 @@ import io.rx_cache2.EvictProvider;
 import io.rx_cache2.ProviderHelper;
 import io.rx_cache2.Reply;
 import io.rx_cache2.Source;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.hamcrest.CoreMatchers;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runners.MethodSorters;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;

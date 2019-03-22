@@ -18,10 +18,10 @@ package io.rx_cache2.internal.cache;
 
 import javax.inject.Inject;
 
-import io.rx_cache2.internal.Persistence;
-import io.rx_cache2.internal.Record;
 import io.rx_cache2.Source;
 import io.rx_cache2.internal.Memory;
+import io.rx_cache2.internal.Persistence;
+import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.interceptor.Interceptor;
 
 public final class RetrieveRecord extends Action {

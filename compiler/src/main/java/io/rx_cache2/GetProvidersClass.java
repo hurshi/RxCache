@@ -5,12 +5,15 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import io.reactivex.Observable;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+
+import io.reactivex.Observable;
 
 final class GetProvidersClass {
 

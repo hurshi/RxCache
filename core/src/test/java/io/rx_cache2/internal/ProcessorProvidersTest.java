@@ -16,6 +16,8 @@
 
 package io.rx_cache2.internal;
 
+import org.junit.Test;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -35,7 +37,6 @@ import io.rx_cache2.internal.cache.TwoLayersCache;
 import io.rx_cache2.internal.cache.memory.ReferenceMapMemory;
 import io.rx_cache2.internal.common.BaseTest;
 import io.rx_cache2.internal.migration.DoMigrations;
-import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.core.Is.is;

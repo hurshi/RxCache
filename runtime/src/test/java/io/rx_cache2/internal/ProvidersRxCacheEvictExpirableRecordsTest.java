@@ -16,17 +16,19 @@
 
 package io.rx_cache2.internal;
 
-import io.reactivex.observers.TestObserver;
-import io.rx_cache2.DynamicKey;
-import io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence;
-import io.rx_cache2.internal.common.BaseTestEvictingTask;
-import java.util.List;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runners.MethodSorters;
+
+import java.util.List;
+
+import io.reactivex.observers.TestObserver;
+import io.rx_cache2.DynamicKey;
+import io.rx_cache2.internal.cache.EvictExpirableRecordsPersistence;
+import io.rx_cache2.internal.common.BaseTestEvictingTask;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

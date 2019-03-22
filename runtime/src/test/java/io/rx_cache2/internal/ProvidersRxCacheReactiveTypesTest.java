@@ -16,6 +16,14 @@
 
 package io.rx_cache2.internal;
 
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.util.Arrays;
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -23,12 +31,6 @@ import io.reactivex.Single;
 import io.reactivex.exceptions.CompositeException;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

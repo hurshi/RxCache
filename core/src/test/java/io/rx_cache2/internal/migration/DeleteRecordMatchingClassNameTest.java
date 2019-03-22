@@ -1,9 +1,11 @@
 package io.rx_cache2.internal.migration;
 
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.common.BaseTest;
-import java.util.Arrays;
-import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

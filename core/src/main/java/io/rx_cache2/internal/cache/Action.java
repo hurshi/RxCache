@@ -19,8 +19,8 @@ package io.rx_cache2.internal.cache;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Memory;
+import io.rx_cache2.internal.Persistence;
 
 abstract class Action {
   private static final String PREFIX_DYNAMIC_KEY = "$d$d$d$";

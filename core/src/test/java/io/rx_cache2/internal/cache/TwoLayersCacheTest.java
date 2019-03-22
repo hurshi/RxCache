@@ -16,13 +16,14 @@
 
 package io.rx_cache2.internal.cache;
 
+import org.junit.Test;
+
 import io.rx_cache2.Source;
 import io.rx_cache2.internal.Memory;
 import io.rx_cache2.internal.Mock;
 import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.cache.memory.ReferenceMapMemory;
 import io.rx_cache2.internal.common.BaseTest;
-import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.MatcherAssert.assertThat;

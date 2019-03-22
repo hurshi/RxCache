@@ -16,6 +16,10 @@
 
 package io.rx_cache2.internal;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
@@ -29,9 +33,6 @@ import io.rx_cache2.Expirable;
 import io.rx_cache2.LifeCache;
 import io.rx_cache2.ProviderKey;
 import io.rx_cache2.Reply;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Provided to test as an integration test the library RxCache

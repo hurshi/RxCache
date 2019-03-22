@@ -16,9 +16,11 @@
 
 package io.rx_cache2.internal.migration;
 
-import io.reactivex.Observable;
 import java.util.List;
+
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
 
 public final class DeleteRecordMatchingClassName {
   private final io.rx_cache2.internal.Persistence persistence;

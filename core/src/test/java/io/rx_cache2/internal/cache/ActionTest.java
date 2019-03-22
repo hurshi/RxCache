@@ -16,15 +16,15 @@
 
 package io.rx_cache2.internal.cache;
 
-import io.rx_cache2.internal.common.BaseTest;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.Memory;
+import io.rx_cache2.internal.Record;
+import io.rx_cache2.internal.common.BaseTest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;

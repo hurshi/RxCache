@@ -16,12 +16,14 @@
 
 package io.rx_cache2.internal.migration;
 
-import io.reactivex.Observable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
 
 final class GetPendingMigrations {
   private int cacheVersion;

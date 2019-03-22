@@ -16,13 +16,15 @@
 
 package io.rx_cache2.internal.migration;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 import io.rx_cache2.MigrationCache;
 import io.rx_cache2.internal.Persistence;
-import java.util.List;
-import javax.inject.Inject;
 
 public final class DoMigrations {
   private final io.rx_cache2.internal.migration.GetCacheVersion getCacheVersion;

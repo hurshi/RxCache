@@ -16,12 +16,14 @@
 
 package io.rx_cache2.internal.migration;
 
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
 import io.reactivex.observers.TestObserver;
 import io.rx_cache2.MigrationCache;
 import io.rx_cache2.internal.common.BaseTest;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

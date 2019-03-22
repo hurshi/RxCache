@@ -16,6 +16,11 @@
 
 package io.rx_cache2.internal.cache;
 
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -26,10 +31,6 @@ import io.rx_cache2.internal.Memory;
 import io.rx_cache2.internal.Persistence;
 import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.interceptor.Interceptor;
-
-import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 @Singleton
 public final class EvictExpirableRecordsPersistence extends Action {

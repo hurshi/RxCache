@@ -16,15 +16,15 @@
 
 package io.rx_cache2.internal;
 
-import io.reactivex.Observable;
-import io.rx_cache2.Interceptors;
-import io.rx_cache2.internal.interceptor.Interceptor;
-import io.victoralbertos.jolyglot.JolyglotGenerics;
 import java.io.File;
 import java.lang.reflect.Proxy;
 import java.security.InvalidParameterException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import io.reactivex.Observable;
+import io.rx_cache2.internal.interceptor.Interceptor;
+import io.victoralbertos.jolyglot.JolyglotGenerics;
 
 public final class RxCache {
   private final Builder builder;
