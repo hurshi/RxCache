@@ -1,5 +1,9 @@
 apply plugin: 'java-library'
 
+apply plugin: 'maven'
+
+group = 'io.github.hurshi.rxcache'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
