@@ -12,6 +12,7 @@ public interface CommonCache {
     @LifeCache(duration = 1, timeUnit = TimeUnit.SECONDS)
     Single<User> getUser(Single<User> single);
 
+
     @Interceptors(classes = EncryptionInterceptor.class)
     @UseExpiredDataIfNotLoaderAvailable
     @LifeCache(duration = 10, timeUnit = TimeUnit.SECONDS)

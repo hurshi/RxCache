@@ -16,7 +16,8 @@
 
 package io.rx_cache2.internal;
 
-import org.apache.commons.codec.binary.Base64;
+
+import com.google.common.io.BaseEncoding;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -127,7 +128,7 @@ public final class Disk implements Persistence {
                     }
                 }
                 StringBuilder userDataBase64Encoded = new StringBuilder(QUOTES)
-                        .append(Base64.encodeBase64String(userDataIntercepted.getBytes(Charset.defaultCharset())))
+                        .append(BaseEncoding.base64().encode(userDataIntercepted.getBytes(Charset.defaultCharset())))
                         .append(QUOTES);
                 wrapperJSONSerialized = wrapperJSONSerialized.replace(userData, userDataBase64Encoded);
             }
@@ -230,7 +231,7 @@ public final class Disk implements Persistence {
 
             if (null != interceptors && interceptors.length > 0) {
                 String userDataBase64Encoded = diskRecord.getData().toString();
-                String userDataBase64Decoded = new String(Base64.decodeBase64(userDataBase64Encoded), Charset.defaultCharset());
+                String userDataBase64Decoded = new String(BaseEncoding.base64().decode(userDataBase64Encoded), Charset.defaultCharset());
                 for (Class itClass : interceptors) {
                     Interceptor it = getInterceptorByClass(itClass);
                     if (null != it) {
