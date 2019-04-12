@@ -211,6 +211,7 @@ public final class Disk implements Persistence {
         key = safetyKey(key);
 
         File file = new File(cacheDirectory, key);
+        if (!file.exists()) return null;
 
         StringBuilder contentBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {

@@ -25,49 +25,52 @@ import io.rx_cache2.internal.Record;
 import io.rx_cache2.internal.interceptor.Interceptor;
 
 public final class RetrieveRecord extends Action {
-  private final EvictRecord evictRecord;
-  private final HasRecordExpired hasRecordExpired;
+    private final EvictRecord evictRecord;
+    private final HasRecordExpired hasRecordExpired;
 
-  @Inject public RetrieveRecord(Memory memory, Persistence persistence, EvictRecord evictRecord,
-      HasRecordExpired hasRecordExpired) {
-    super(memory, persistence);
-    this.evictRecord = evictRecord;
-    this.hasRecordExpired = hasRecordExpired;
-  }
-
-  <T> Record<T> retrieveRecord(String providerKey, String dynamicKey, String dynamicKeyGroup,
-      boolean useExpiredDataIfLoaderNotAvailable, long lifeTime, Class<Interceptor>[] interceptors) {
-    String composedKey = composeKey(providerKey, dynamicKey, dynamicKeyGroup);
-
-    Record<T> record = memory.getIfPresent(composedKey);
-
-    if (record != null) {
-      record.setSource(Source.MEMORY);
-    } else {
-      try {
-        record = persistence.retrieveRecord(composedKey, interceptors);
-        record.setSource(Source.PERSISTENCE);
-        memory.put(composedKey, record);
-      } catch (Exception ignore) {
-        return null;
-      }
+    @Inject
+    public RetrieveRecord(Memory memory, Persistence persistence, EvictRecord evictRecord,
+                          HasRecordExpired hasRecordExpired) {
+        super(memory, persistence);
+        this.evictRecord = evictRecord;
+        this.hasRecordExpired = hasRecordExpired;
     }
 
-    record.setLifeTime(lifeTime);
-    record.setUseExpiredDataIfNotLoaderAvailable(useExpiredDataIfLoaderNotAvailable);
+    <T> Record<T> retrieveRecord(String providerKey, String dynamicKey, String dynamicKeyGroup,
+                                 boolean useExpiredDataIfLoaderNotAvailable,
+                                 long lifeTime, Class<Interceptor>[] interceptors) {
+        String composedKey = composeKey(providerKey, dynamicKey, dynamicKeyGroup);
+
+        Record<T> record = memory.getIfPresent(composedKey);
+
+        if (record != null) {
+            record.setSource(Source.MEMORY);
+        } else {
+            try {
+                record = persistence.retrieveRecord(composedKey, interceptors);
+                if (null == record) return null;
+                record.setSource(Source.PERSISTENCE);
+                memory.put(composedKey, record);
+            } catch (Exception ignore) {
+                return null;
+            }
+        }
+
+        record.setLifeTime(lifeTime);
+        record.setUseExpiredDataIfNotLoaderAvailable(useExpiredDataIfLoaderNotAvailable);
 
 
-    if (hasRecordExpired.hasRecordExpired(record) && !useExpiredDataIfLoaderNotAvailable) {
-      if (!dynamicKeyGroup.isEmpty()) {
-        evictRecord.evictRecordMatchingDynamicKeyGroup(providerKey, dynamicKey,
-            dynamicKeyGroup);
-      } else if (!dynamicKey.isEmpty()) {
-        evictRecord.evictRecordsMatchingDynamicKey(providerKey, dynamicKey);
-      } else {
-        evictRecord.evictRecordsMatchingProviderKey(providerKey);
-      }
+        if (hasRecordExpired.hasRecordExpired(record) && !useExpiredDataIfLoaderNotAvailable) {
+            if (!dynamicKeyGroup.isEmpty()) {
+                evictRecord.evictRecordMatchingDynamicKeyGroup(providerKey, dynamicKey,
+                        dynamicKeyGroup);
+            } else if (!dynamicKey.isEmpty()) {
+                evictRecord.evictRecordsMatchingDynamicKey(providerKey, dynamicKey);
+            } else {
+                evictRecord.evictRecordsMatchingProviderKey(providerKey);
+            }
+        }
+
+        return record;
     }
-
-    return record;
-  }
 }

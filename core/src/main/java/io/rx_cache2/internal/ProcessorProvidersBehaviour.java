@@ -23,12 +23,12 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.rx_cache2.EvictDynamicKey;
 import io.rx_cache2.EvictDynamicKeyGroup;
 import io.rx_cache2.Reply;
+import io.rx_cache2.RxCacheException;
 import io.rx_cache2.Source;
 import io.rx_cache2.internal.cache.GetDeepCopy;
 import io.rx_cache2.internal.cache.HasRecordExpired;
@@ -55,39 +55,21 @@ public final class ProcessorProvidersBehaviour implements ProcessorProviders {
     private Observable<Integer> startProcesses(
             io.rx_cache2.internal.migration.DoMigrations doMigrations,
             final io.rx_cache2.internal.cache.EvictExpiredRecordsPersistence evictExpiredRecordsPersistence) {
-        Observable<Integer> oProcesses = doMigrations.react().flatMap(new Function<Integer, ObservableSource<Integer>>() {
-            @Override
-            public ObservableSource<Integer> apply(Integer ignore) throws Exception {
-                return evictExpiredRecordsPersistence.startEvictingExpiredRecords();
-            }
-        }).subscribeOn((Schedulers.io())).observeOn(Schedulers.io()).share();
+        Observable<Integer> oProcesses = doMigrations.react().flatMap((Function<Integer, ObservableSource<Integer>>) ignore -> evictExpiredRecordsPersistence.startEvictingExpiredRecords()).subscribeOn((Schedulers.io())).observeOn(Schedulers.io()).share();
 
-        oProcesses.subscribe(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer ignore) throws Exception {
-                hasProcessesEnded = true;
-            }
-        });
+        oProcesses.subscribe(ignore -> hasProcessesEnded = true);
 
         return oProcesses;
     }
 
     @Override
     public <T> Observable<T> process(final io.rx_cache2.ConfigProvider configProvider) {
-        return Observable.defer(new Callable<ObservableSource<? extends T>>() {
-            @Override
-            public ObservableSource<? extends T> call() throws Exception {
-                if (hasProcessesEnded) {
-                    return getData(configProvider);
-                }
-
-                return oProcesses.flatMap(new Function<Integer, ObservableSource<? extends T>>() {
-                    @Override
-                    public ObservableSource<? extends T> apply(Integer ignore) throws Exception {
-                        return getData(configProvider);
-                    }
-                });
+        return Observable.defer(() -> {
+            if (hasProcessesEnded) {
+                return getData(configProvider);
             }
+
+            return oProcesses.flatMap(ignore -> getData(configProvider));
         });
     }
 
@@ -105,40 +87,29 @@ public final class ProcessorProvidersBehaviour implements ProcessorProviders {
             replyObservable = getDataFromLoader(configProvider, record);
         }
 
-        return (Observable<T>) replyObservable.map(new Function<Reply, Object>() {
-            @Override
-            public Object apply(Reply reply) throws Exception {
-                return ProcessorProvidersBehaviour.this.getReturnType(configProvider, reply);
-            }
-        });
+        return (Observable<T>) replyObservable.map(reply -> ProcessorProvidersBehaviour.this.getReturnType(configProvider, reply));
     }
 
     private Observable<Reply> getDataFromLoader(final io.rx_cache2.ConfigProvider configProvider,
                                                 final Record record) {
-        return configProvider.getLoaderObservable().map(new Function<Object, Reply>() {
-            @Override
-            public Reply apply(Object data) throws Exception {
-                clearKeyIfNeeded(configProvider);
-                twoLayersCache.save(configProvider.getProviderKey(), configProvider.getDynamicKey(),
-                        configProvider.getDynamicKeyGroup(), data, configProvider.getLifeTimeMillis(),
-                        configProvider.isExpirable(), configProvider.getInterruptors(), configProvider.useExpiredDataIfNotLoaderAvailable());
-                return new Reply(data, Source.CLOUD);
+        return configProvider.getLoaderObservable().map((Function<Object, Reply>) data -> {
+            clearKeyIfNeeded(configProvider);
+            twoLayersCache.save(configProvider.getProviderKey(), configProvider.getDynamicKey(),
+                    configProvider.getDynamicKeyGroup(), data, configProvider.getLifeTimeMillis(),
+                    configProvider.isExpirable(), configProvider.getInterruptors(), configProvider.useExpiredDataIfNotLoaderAvailable());
+            return new Reply(data, Source.CLOUD);
+        }).onErrorReturn((Function<Object, Object>) o -> {
+            clearKeyIfNeeded(configProvider);
+
+            boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable();
+
+            if (useExpiredData && record != null) {
+                return new Reply(record.getData(), record.getSource());
             }
-        }).onErrorReturn(new Function<Object, Object>() {
-            @Override
-            public Object apply(Object o) throws Exception {
-                clearKeyIfNeeded(configProvider);
 
-                boolean useExpiredData = configProvider.useExpiredDataIfNotLoaderAvailable();
-
-                if (useExpiredData && record != null) {
-                    return new Reply(record.getData(), record.getSource());
-                }
-
-                throw new io.rx_cache2.RxCacheException(io.rx_cache2.internal.Locale.NOT_DATA_RETURN_WHEN_CALLING_OBSERVABLE_LOADER
-                        + " "
-                        + configProvider.getProviderKey(), (Throwable) o);
-            }
+            throw new RxCacheException(Locale.NOT_DATA_RETURN_WHEN_CALLING_OBSERVABLE_LOADER
+                    + " "
+                    + configProvider.getProviderKey(), (Throwable) o);
         });
     }
 
@@ -169,12 +140,9 @@ public final class ProcessorProvidersBehaviour implements ProcessorProviders {
 
     @Override
     public Observable<Void> evictAll() {
-        return Observable.defer(new Callable<ObservableSource<Void>>() {
-            @Override
-            public ObservableSource<Void> call() throws Exception {
-                ProcessorProvidersBehaviour.this.twoLayersCache.evictAll();
-                return Completable.complete().toObservable();
-            }
+        return Observable.defer((Callable<ObservableSource<Void>>) () -> {
+            ProcessorProvidersBehaviour.this.twoLayersCache.evictAll();
+            return Completable.complete().toObservable();
         });
     }
 }
